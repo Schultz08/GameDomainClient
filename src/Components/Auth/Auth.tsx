@@ -3,7 +3,6 @@ import "./Auth.css";
 import { Button } from '@material-ui/core';
 
 
-
 class Auth extends React.Component {
     state = {
         firstName: "",
@@ -40,12 +39,13 @@ class Auth extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                localStorage.setItem("sessionToken", data.token)
+                localStorage.setItem("token", data.token)
+                console.log(localStorage.getItem("token"))
             })
     }
 
     handleLogout = () => {
-            localStorage.setItem("sessionToken", "")
+            localStorage.setItem("token", "")
     }
 
     title = () => {
