@@ -1,0 +1,16 @@
+.thebutton{
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}
+
+.thebutton:hover{
+    cursor: pointer;
+    background-color: brown;
+}
+
+.score{
+    position: fixed;
+    z-index: 100;
+    color: white;
+}
