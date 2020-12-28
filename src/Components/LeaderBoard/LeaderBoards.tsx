@@ -1,11 +1,11 @@
 import React from "react";
 import LeaderBoardsDisplay from "./LeaderBoardDisplay"
-
+import Grid from '@material-ui/core/Grid';
 
 class LeaderBoards extends React.Component {
-        state ={
-            players: []
-        }
+    state ={
+        players: []
+    }
 
     componentDidMount(){
         fetch(`http://localhost:3000/score/allScores/`, {
@@ -20,9 +20,7 @@ class LeaderBoards extends React.Component {
 
     render(){
         return (
-            <div>
             <LeaderBoardsDisplay players={this.state.players}/>
-            </div>
         )
     }
 }
