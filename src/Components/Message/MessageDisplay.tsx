@@ -23,7 +23,7 @@ const useStyle = makeStyles((theme: Theme) =>
 
 const MessageDisplay = (props: any) => {
     const classes = useStyle();
-    console.log(props)
+    console.log(props, "Props console")
 
     return (
         <div className={classes.root}>

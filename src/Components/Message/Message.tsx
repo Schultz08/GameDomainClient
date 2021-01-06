@@ -29,12 +29,12 @@ class Message extends React.Component<myProps, myState> {
         })
             .then(res => res.json())
             .then(data => this.setState({ conversation: data }))
-            .then(msg => console.log(this.state.conversation))
+            .catch(err => console.log(err))
 
     }
 
     displayConductor = () => {
-        if (this.state.conversation) {
+        if (!this.state.conversation == undefined) {
             return (
                 <MessageDisplay conversation={this.state.conversation} />
             )

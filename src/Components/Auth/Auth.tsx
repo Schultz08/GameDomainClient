@@ -1,23 +1,46 @@
 import React from "react";
 import "./Auth.css";
 import { Button } from '@material-ui/core';
+import { Redirect } from "react-router-dom"
+
+type myState = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    userName: string,
+    password: string,
+    userRole: string,
+    login: boolean | null
+    redirect: string | null
+}
+
+type myProps = {
+    updateToken(token: string): void
+}
 
 
-class Auth extends React.Component {
-    state = {
-        firstName: "",
-        lastName: "",
-        email: "",
-        userName: "",
-        password: "",
-        userRole: "",
-        login: true,
+class Auth extends React.Component<myProps, myState> {
+    constructor(props: myProps) {
+        super(props)
+        this.state = {
+            firstName: "",
+            lastName: "",
+            email: "",
+            userName: "",
+            password: "",
+            userRole: "",
+            login: null,
+            redirect: null,
+        }
     }
+
+
 
     handleSubmit = (event: any) => {
         event.preventDefault();
 
         let url = this.state.login ? "http://localhost:3000/user/login" : "http://localhost:3000/user/register"
+
 
         const body = this.state.login ? {
             email: this.state.email,
@@ -39,13 +62,17 @@ class Auth extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                localStorage.setItem("token", data.token)
-                console.log(localStorage.getItem("token"))
+                // localStorage.setItem("token", data.token)
+                // console.log(localStorage.getItem("token"))
+                this.props.updateToken(data.token)
+                this.setState({ redirect: "/" })
+
             })
+            .catch(err => console.log(err))
     }
 
     handleLogout = () => {
-            localStorage.setItem("token", "")
+        localStorage.setItem("token", "")
     }
 
     title = () => {
@@ -54,6 +81,7 @@ class Auth extends React.Component {
 
     logginToggle = (event: any) => {
         event.preventDefault();
+        console.log(this.state.login, "Login")
         this.setState({ login: !this.state.login })
     }
 
@@ -94,7 +122,7 @@ class Auth extends React.Component {
                     onClick={(e) => this.logginToggle(e)}
                     className="subButton"
                 >Sign Up!</Button>
-            </div> 
+            </div>
             :
             <div>
                 <Button color="primary"
@@ -109,7 +137,9 @@ class Auth extends React.Component {
     }
 
     render() {
-
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
         return (
             <div className="container">
                 <div className="innerCard">

@@ -1,22 +1,50 @@
 import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import "./gameStyle.css"
-// const GameConst = require("./GameClasses");
-// const Enemy = require("./GameClasses").Enemy;
-// const Particle = require("./GameClasses").Particle;
-// const Projectile = require("./GameClasses").Projectile;
-// const Player = require("./GameClasses").Player;
 
 const Canvas = props => {
-    // constructor create.Ref(canvas)
     let [score, setScore] = useState(0)
-    const [isPlaying, setIsPlaying] = useState(false)
+    let [isPlaying, setIsPlaying] = useState(false)
     const [projectiles, setProjectiles] = useState([])
     const [enemies, setEnemies] = useState([])
     const [particles, setParticles] = useState([])
+    const getWidth = () => window.innerWidth
+    const getHeight = () => window.innerHeight
+    let [width, setWidth] = useState(getWidth())
+    let [height, setHeight] = useState(getHeight())
+    let prevent = 1;
+
     const canvasRef = useRef(null)
     const friction = 0.99;
     let player;
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const canvasContext = canvas.getContext("2d");
+        canvas.style.width ='100%';
+        canvas.style.height='100%';
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        canvasContext.fillStyle = "rgba(0,0,0,1)"
+        canvasContext.fillRect(0, 0, canvas.width, canvas.height)
+    },[prevent])
+
+    useEffect(() => {
+        buildGame();
+    },[isPlaying])
+
+
+    useEffect(() => {
+        const resizeListener = () => {
+            setWidth(getWidth())
+            setHeight(getHeight())
+        };
+        window.addEventListener("resize", resizeListener)
+
+        return () => {
+            window.removeEventListener("resize", resizeListener)
+        }
+    },[width, height])
 
     class Player {
         constructor(x, y, radius, color) {
@@ -143,16 +171,41 @@ const Canvas = props => {
     }
 
 
-    function getcontext() {
+    function setGameWindow(){
         const canvas = canvasRef.current;
         const canvasContext = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.style.width ='100%';
+        canvas.style.height='100%';
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+
+    function startGame() {
+        setIsPlaying(prevState => !prevState)
+        
+    }
+    
+    function buildGame() {
+        setGameWindow();
+        console.log("1",isPlaying)
+
+        const canvas = canvasRef.current;
+        console.log("2",isPlaying)
+
+        const canvasContext = canvas.getContext("2d");
+        console.log("3",isPlaying)
+
         const x = canvas.width / 2
+        console.log("4",isPlaying)
+
         const y = canvas.height / 2
+        console.log("5",isPlaying)
+
         player = new Player(x, y, 10, "red",)
-        spawnEnemies(canvas, canvasContext)
-        animate(canvas, canvasContext)
+        console.log("6",isPlaying)
+
+        spawnEnemies()
+        animate()
     }
 
 
@@ -206,6 +259,10 @@ const Canvas = props => {
         canvasContext.fillRect(0, 0, canvas.width, canvas.height)
 
         player.draw();
+
+        if(!isPlaying){
+            cancelAnimationFrame(animeationId)
+        }
         //create explosions
         newParticles.forEach((particle, index) => {
             if (particle.alpha <= 0) {
@@ -289,8 +346,8 @@ const Canvas = props => {
         const canvas = canvasRef.current
         let newProjectiles = projectiles
         const angle = Math.atan2(
-            event.clientY - canvas.height / 2,
-            event.clientX - canvas.width / 2)
+            event.clientY - height / 2,
+            event.clientX -  width / 2)
         const velocity = {
             x: Math.cos(angle) * 5,
             y: Math.sin(angle) * 5
@@ -311,13 +368,13 @@ const Canvas = props => {
 
 
     return (
-        <div>
-
-                <div className="score"><span>Score:  </span><span>{score}</span></div>
+        <div className="container">
+            <div className="score">
+                <span>Score:  </span>
+                <span>{score}</span>
+            </div>
             <canvas ref={canvasRef}{...props} onClick={(e) => handleClick(e)}></canvas>
-            <button onClick={() => getcontext()} className="thebutton">The Button</button>
-
-
+            <button onClick={() => startGame()} className="thebutton">The Button</button>
         </div>
     )
 }

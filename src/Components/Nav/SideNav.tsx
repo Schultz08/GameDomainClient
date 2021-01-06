@@ -1,120 +1,167 @@
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import React from "react";
+import { Theme } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
+import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
-import Link, { LinkProps } from '@material-ui/core/Link';
 import ListItem from '@material-ui/core/ListItem';
-import Collapse from '@material-ui/core/Collapse';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import {Link} from "@material-ui/core" 
+import Collapse from '@material-ui/core/Collapse';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import { Route, MemoryRouter } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom';
-import { Omit } from '@material-ui/types';
+import StarBorder from '@material-ui/icons/StarBorder';
 
-interface ListItemLinkProps extends LinkProps {
-    to: string;
-    open?: boolean;
-  }
+
+const styles = (theme:Theme) => ({
+    root: {
+            width: '100%',
+            maxWidth: 360,
+            backgroundColor: theme.palette.background.paper,
+          },
+          nested: {
+            paddingLeft: theme.spacing(4),
+          },
+  });
+
+type myProps = {
+    token: string | null;
+    classes: any;
+    clearToken(): void;
+}
+type myState = {
+    isLoggedIn: boolean;
+    open: boolean;
+    token: string | null;
+}
   
-  const breadcrumbNameMap: { [key: string]: string } = {
-    '/inbox': 'Inbox',
-    '/inbox/important': 'Important',
-    '/trash': 'Trash',
-    '/spam': 'Spam',
-    '/drafts': 'Drafts',
-  };
-  
-  function ListItemLink(props: Omit<ListItemLinkProps, 'ref'>) {
-    const { to, open, ...other } = props;
-    const primary = breadcrumbNameMap[to];
-  
-    return (
-      <li>
-        <ListItem button component={RouterLink} to={to} {...other}>
-          <ListItemText primary={primary} />
-          {open != null ? open ? <ExpandLess /> : <ExpandMore /> : null}
-        </ListItem>
-      </li>
-    );
-  }
-  
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      root: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: 360,
-      },
-      lists: {
-        backgroundColor: theme.palette.background.paper,
-        marginTop: theme.spacing(1),
-      },
-      nested: {
-        paddingLeft: theme.spacing(4),
-      },
-    }),
-  );
-  
-  interface LinkRouterProps extends LinkProps {
-    to: string;
-    replace?: boolean;
-  }
-  
-  const LinkRouter = (props: LinkRouterProps) => <Link {...props} component={RouterLink as any} />;
-  
-  export default function SideNav() {
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
-  
-    const handleClick = () => {
-      setOpen((prevOpen) => !prevOpen);
-    };
-  
-    return (
-      <MemoryRouter initialEntries={['/inbox']} initialIndex={0}>
-        <div className={classes.root}>
-          <Route>
-            {({ location }) => {
-              const pathnames = location.pathname.split('/').filter((x) => x);
-  
-              return (
-                <Breadcrumbs aria-label="breadcrumb">
-                  <LinkRouter color="inherit" to="/">
-                    Home
-                  </LinkRouter>
-                  {pathnames.map((value, index) => {
-                    const last = index === pathnames.length - 1;
-                    const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-  
-                    return last ? (
-                      <Typography color="textPrimary" key={to}>
-                        {breadcrumbNameMap[to]}
-                      </Typography>
-                    ) : (
-                      <LinkRouter color="inherit" to={to} key={to}>
-                        {breadcrumbNameMap[to]}
-                      </LinkRouter>
-                    );
-                  })}
-                </Breadcrumbs>
-              );
-            }}
-          </Route>
-          <nav className={classes.lists} aria-label="mailbox folders">
-            <List>
-              <ListItemLink to="/inbox" open={open} onClick={handleClick} />
-              <Collapse component="li" in={open} timeout="auto" unmountOnExit>
-                <List disablePadding>
-                  <ListItemLink to="/inbox/important" className={classes.nested} />
+     
+  class SideNav extends React.Component<myProps, myState>{
+      constructor(props: myProps){
+          super(props)
+          this.state = {
+            isLoggedIn: false,
+            open: false,
+            token: null
+            }
+        }
+
+        componentDidMount(){
+              if(this.props.token){
+                   this.setState({isLoggedIn: true})
+                   this.setState({token: this.props.token})
+              }else{
+                   this.setState({isLoggedIn: false})
+                   this.setState({token: this.props.token})
+              }
+        }
+
+        componentDidUpdate(){
+          console.log("did update")
+          if(this.props.token !== this.state.token){
+            this.setState({isLoggedIn: true})
+            this.setState({token: this.props.token})
+       }else if(!this.props.token && this.state.isLoggedIn == true){
+            this.setState({isLoggedIn: false})
+            this.setState({token: this.props.token})
+       }
+        }
+
+        loginDisplay = (classes:any) =>{
+            if(this.state.isLoggedIn){
+              return(
+                <div>
+        
+                <ListItem button onClick={this.handleClick}>
+                <ListItemIcon>
+                  <DraftsIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Mail" />
+                {this.state.open ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <Link color="inherit" href="/message">
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Inbox" />
+                  </ListItem>
+                  </Link>
                 </List>
               </Collapse>
-              <ListItemLink to="/trash" />
-              <ListItemLink to="/spam" />
-            </List>
-          </nav>
-        </div>
-      </MemoryRouter>
-    );
-  }
+              <Link color="inherit" href="/logout">
+              <ListItem button onClick={this.handleLogout}>
+                <ListItemText primary="Logout"/>
+              </ListItem>
+              </Link>
+                </div>
+              )   }else{
+                return (
+                  <div>
+          
+                  <Link color="inherit" href="/login">
+                  <ListItem button>
+                  <ListItemIcon>
+                  </ListItemIcon>
+                  <ListItemText primary="login/signup" />
+                </ListItem>
+                  </Link>
+          
+          {/* <Link color="inherit" href="/register">
+          <ListItem button>
+          <ListItemIcon>
+          </ListItemIcon>
+          <ListItemText primary="login" />
+          </ListItem>
+          </Link> */}
+                  </div>
+                  
+                )
+              }
+            }
+            handleLogout = () => {
+              this.props.clearToken()
+              }
+              handleClick = () => {
+                this.setState({open: !this.state.open});
+              };
+    render(){
+
+        const {classes} = this.props;
+    return (
+      <List
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      subheader={
+        <ListSubheader component="div" id="nested-list-subheader">
+          Welcome to GameDomain!
+        </ListSubheader>
+      }
+      className={classes.root}
+      >
+        <Link color="inherit" href="/leaderboard">
+      <ListItem button>
+        <ListItemIcon>
+        </ListItemIcon>
+        <ListItemText primary="Check the LeaderBoards!" />
+      </ListItem>
+        </Link>
+        <Link color="inherit" href="/game">
+      <ListItem button>
+        <ListItemIcon>
+        </ListItemIcon>
+        <ListItemText primary="Play A Game!!!" />
+      </ListItem>
+        </Link>
+        {this.loginDisplay(classes)}
+    </List>
+  );
+}
+}
+
+export default withStyles(styles)(SideNav)
