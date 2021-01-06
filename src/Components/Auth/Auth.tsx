@@ -62,7 +62,7 @@ class Auth extends React.Component<myProps, myState> {
         })
             .then(res => res.json())
             .then(data => {
-                // localStorage.setItem("token", data.token)
+                localStorage.setItem("token", data.token)
                 // console.log(localStorage.getItem("token"))
                 this.props.updateToken(data.token)
                 this.setState({ redirect: "/" })

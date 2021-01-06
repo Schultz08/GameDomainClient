@@ -92,6 +92,14 @@ type myState = {
                     <ListItemText primary="Inbox" />
                   </ListItem>
                   </Link>
+                  <Link color="inherit" href="/message">
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="send new message" />
+                  </ListItem>
+                  </Link>
                 </List>
               </Collapse>
               <Link color="inherit" href="/logout">
@@ -126,6 +134,7 @@ type myState = {
             }
             handleLogout = () => {
               this.props.clearToken()
+              localStorage.clear()
               }
               handleClick = () => {
                 this.setState({open: !this.state.open});

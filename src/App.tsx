@@ -74,17 +74,15 @@ class App extends React.Component<myProps, myState>{
     }
   }
 
-  // componentDidMount(){
-  //   console.log(this.state.token, "Didmount")
-  //   this.setState({token: localStorage.getItem("token")})
-  // }
+  componentDidMount(){
+    this.setState({token: localStorage.getItem("token")})
+  }
 
-  // componentDidUpdate(){
-  //   console.log(this.state.token, "didmount")
-  //   if(this.state.token !== localStorage.getItem("token")){
-  //   this.setState({token: localStorage.getItem("token")})
-  //   }
-  // }
+  componentDidUpdate(){
+    if(this.state.token !== localStorage.getItem("token")){
+    this.setState({token: localStorage.getItem("token")})
+    }
+  }
 
   updateToken = (token: string) =>{
     if(this.state.token !== token){
