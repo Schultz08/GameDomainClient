@@ -4,18 +4,18 @@ import { Button } from '@material-ui/core';
 import { Redirect } from "react-router-dom"
 
 type myState = {
-    firstName: string,
-    lastName: string,
-    email: string,
-    userName: string,
-    password: string,
-    userRole: string,
-    login: boolean | null
-    redirect: string | null
+    redirect: string | null;
+    login: boolean | null;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    password: string;
+    userRole: string;
+    email: string;
 }
 
-type myProps = {
-    updateToken(token: string): void
+interface myProps {
+    updateToken:(token: string) => void;
 }
 
 
@@ -23,14 +23,14 @@ class Auth extends React.Component<myProps, myState> {
     constructor(props: myProps) {
         super(props)
         this.state = {
+            redirect: null,
             firstName: "",
             lastName: "",
-            email: "",
             userName: "",
             password: "",
             userRole: "",
-            login: null,
-            redirect: null,
+            login: true,
+            email: "",
         }
     }
 
@@ -62,14 +62,19 @@ class Auth extends React.Component<myProps, myState> {
         })
             .then(res => res.json())
             .then(data => {
-                localStorage.setItem("token", data.token)
                 // console.log(localStorage.getItem("token"))
+                localStorage.setItem("token", data.token)
                 this.props.updateToken(data.token)
                 this.setState({ redirect: "/" })
 
             })
             .catch(err => console.log(err))
     }
+
+    componentDidMount(){
+        console.log(this.props)
+    }
+
 
     handleLogout = () => {
         localStorage.setItem("token", "")

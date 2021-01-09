@@ -45,29 +45,43 @@ type myState = {
           this.state = {
             isLoggedIn: false,
             open: false,
-            token: null
+            token: ""
             }
         }
 
         componentDidMount(){
-              if(this.props.token){
-                   this.setState({isLoggedIn: true})
-                   this.setState({token: this.props.token})
-              }else{
-                   this.setState({isLoggedIn: false})
-                   this.setState({token: this.props.token})
-              }
+          if(localStorage.getItem("token")){
+            this.setState({isLoggedIn: true})
+            this.setState({token: localStorage.getItem("token")})
+          }else{
+            this.setState({isLoggedIn:false})
+            this.setState({token: ""})
+          }
+              // if(this.props.token){
+              //      this.setState({isLoggedIn: true})
+              //      this.setState({token: this.props.token})
+              // }else{
+              //      this.setState({isLoggedIn: false})
+              //      this.setState({token: this.props.token})
+              // }
         }
 
         componentDidUpdate(){
           console.log("did update")
-          if(this.props.token !== this.state.token){
+          if(localStorage.getItem("token") !== this.state.token){
             this.setState({isLoggedIn: true})
-            this.setState({token: this.props.token})
-       }else if(!this.props.token && this.state.isLoggedIn == true){
+            this.setState({token: localStorage.getItem("token")}) 
+          }else if(!localStorage.getItem("token") && this.state.isLoggedIn == true){
             this.setState({isLoggedIn: false})
-            this.setState({token: this.props.token})
-       }
+            this.setState({token: localStorage.getItem("token")})
+          }
+      //     if(this.props.token !== this.state.token){
+      //       this.setState({isLoggedIn: true})
+      //       this.setState({token: this.props.token})
+      //  }else if(!this.props.token && this.state.isLoggedIn == true){
+      //       this.setState({isLoggedIn: false})
+      //       this.setState({token: this.props.token})
+      //  }
         }
 
         loginDisplay = (classes:any) =>{
@@ -102,11 +116,10 @@ type myState = {
                   </Link>
                 </List>
               </Collapse>
-              <Link color="inherit" href="/logout">
               <ListItem button onClick={this.handleLogout}>
                 <ListItemText primary="Logout"/>
               </ListItem>
-              </Link>
+
                 </div>
               )   }else{
                 return (

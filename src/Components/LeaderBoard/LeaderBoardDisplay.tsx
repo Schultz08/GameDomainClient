@@ -1,6 +1,7 @@
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { DataGrid, ColDef } from '@material-ui/data-grid';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
