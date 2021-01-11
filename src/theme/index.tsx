@@ -1,18 +1,5 @@
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import { orange, yellow} from '@material-ui/core/colors';
+export{default as darkTheme} from "./darkTheme"
+export{default as mainTheme} from "./mainTheme"
+export{default as sunsetTheme} from "./sunsetTheme"
 
 
-
-export const sunsetTheme = createMuiTheme({
-  palette: {
-    type: 'light', 
-    primary: {
-      main: orange[500],
-    },
-    secondary: {
-      main: yellow[800],
-    },
-    contrastThreshold: 3,
-    tonalOffset: 0.2,
-  },
-});

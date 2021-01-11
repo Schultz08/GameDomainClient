@@ -1,21 +1,13 @@
 import React from 'react';
-import { Auth, LeaderBoards, Message, SideNav, SendMessage } from "./Components"
+import { Auth, LeaderBoards, Message, SideNav, SendMessage, ReplyMessage } from "./Components"
 import myGame from "./Games/myGame"
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
 import { withStyles, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Theme, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Grid, Button } from "@material-ui/core"
-import * as themes from "./theme/themes"
+import { Theme, ThemeProvider, MuiThemeProvider } from '@material-ui/core/styles';
+import { Grid, Button, CssBaseline} from "@material-ui/core"
+import * as themes from "./theme"
 
 import Video from "./assets/GameVid.mp4"
-
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: {
-//       main: red[500]
-//     },
-//   },
-// });
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -26,7 +18,6 @@ const styles = (theme: Theme) => createStyles({
   sidenav: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    border: "3px solid black",
     margin: "1rem",
     height: "100%",
     minWidth: "240px",
@@ -36,16 +27,15 @@ const styles = (theme: Theme) => createStyles({
   center: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    border: "3px solid black",
     margin: "1rem",
     height: "100%",
     minWidth: "240px",
     maxHeight: "800px",
+    overflow: "auto",
   },
   leaderboard: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    border: "3px solid black",
     margin: "1rem",
     height: "100%",
     minWidth: "240px",
@@ -156,8 +146,8 @@ class App extends React.Component<myProps, myState>{
     const { classes } = this.props;
     const theme = this.getTheme()
     return (
-      <ThemeProvider theme={theme}>
-
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline/>
         <div className={classes.root}>
           <Grid container justify="center" direction="row" alignItems="center" >
             <Grid container item xs className={classes.sidenav}>
@@ -177,6 +167,7 @@ class App extends React.Component<myProps, myState>{
                   <Route path="/leaderBoard" component={LeaderBoards} />
                   <Route path="/message"> <Message token={this.state.token} /></Route>
                   <Route path="/sendmessage"> <SendMessage token={this.state.token} /></Route>
+                  {/* <Route path="/replymessage"> <ReplyMessage token={this.state.token} /></Route> */}
                 </Switch>
               </Router>
             </Grid>
@@ -185,13 +176,9 @@ class App extends React.Component<myProps, myState>{
             </Grid>
           </Grid>
         </div>
-      </ThemeProvider>
+      </MuiThemeProvider>
     );
   }
 }
-
-
-
-
 
 export default withStyles(styles)(App);

@@ -1,9 +1,30 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { TextField, Button } from "@material-ui/core"
+import { withStyles, createStyles, Theme } from "@material-ui/core"
 
 
+const styles = ((theme: Theme) => createStyles({
+    root: {
+        flexGrow: 1,
+    },
 
+    messageHeader: {
+        width: "100%",
+
+    },
+    messageBody: {
+        margin: 2,
+
+    },
+    button: {
+        marginInlineStart: "auto"
+    },
+    innerWrap: {
+        textAlign: "right",
+    }
+
+}))
 
 type myState = {
     hasReceivingId: boolean;
@@ -18,6 +39,7 @@ type myState = {
 type myProps = {
     token: string | null;
     receivingId?: number;
+    classes: any;
 }
 
 
@@ -88,8 +110,7 @@ class SendMessage extends Component<myProps, myState> {
                 })
                 .catch(err => console.log(err))
         } else {
-
-
+            //highlight UserName input if not verified
         }
 
     }
@@ -98,57 +119,63 @@ class SendMessage extends Component<myProps, myState> {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
         }
+        const { classes } = this.props;
         return (
-            <div><h1>This is send mail</h1>
-                <div className="container">
-                    <div className="innerCard">
-                        <h2>New Message</h2>
-                        <form onSubmit={(e) => this.handleSubmit(e)} autoComplete="off">
+            <div>
+                <h1>This is send mail</h1>
+                <h2>New Message</h2>
+                <div className={classes.innerWrap}>
+                    <form onSubmit={(e) => this.handleSubmit(e)} autoComplete="off">
 
-                            <TextField id="to"
-                                label="To"
-                                defaultValue={this.state.receivingUser}
-                                helperText={this.state.userVerified ? "User Verified" : "Enter a UserName"}
-                                fullWidth
-                                InputProps={{
-                                    readOnly: this.state.userVerified ? true : false,
-                                }}
-                                variant="outlined"
-                                onChange={(event) => this.setState({ receivingUser: event.target.value })}
-                            />
+                        <TextField
+                            className={classes.messageHeader}
+                            color="secondary"
+                            id="to"
+                            label="To"
+                            defaultValue={this.state.receivingUser}
+                            helperText={this.state.userVerified ? "User Verified" : "Enter a UserName"}
+                            fullWidth
+                            InputProps={{
+                                readOnly: this.state.userVerified ? true : false,
+                            }}
+                            variant="outlined"
+                            onChange={(event) => this.setState({ receivingUser: event.target.value })}
+                        />
 
-                            <Button variant="contained" color="primary" onClick={this.state.userVerified ? this.changeUserName : (event) => this.verifyUser(event)}>{this.state.userVerified ? "Change User" : "Verify UserName"}</Button>
+                        <Button variant="contained" color="primary" onClick={this.state.userVerified ? this.changeUserName : (event) => this.verifyUser(event)}>{this.state.userVerified ? "Change User" : "Verify UserName"}</Button>
 
 
-                            <TextField
-                                id="subject"
-                                label="Subject"
-                                fullWidth
-                                defaultValue={this.state.subject}
-                                variant="outlined"
-                                onChange={(event) => this.setState({ subject: event.target.value })}
-                            />
+                        <TextField
+                            className={classes.messageHeader}
+                            color="secondary"
+                            id="subject"
+                            label="Subject"
+                            fullWidth
+                            defaultValue={this.state.subject}
+                            variant="outlined"
+                            onChange={(event) => this.setState({ subject: event.target.value })}
+                        />
 
-                            <TextField
-                                id="messageBody"
-                                label="Message"
-                                defaultValue={this.state.messageBody}
-                                variant="outlined"
-                                multiline
-                                rows={10}
-                                rowsMax={10}
-                                fullWidth
-                                onChange={(event) => this.setState({ messageBody: event.target.value })}
-                            />
+                        <TextField
+                            className={classes.messageBody}
+                            color="secondary"
+                            id="messageBody"
+                            label="Message"
+                            defaultValue={this.state.messageBody}
+                            variant="outlined"
+                            multiline
+                            rows={10}
+                            rowsMax={10}
+                            fullWidth
+                            onChange={(event) => this.setState({ messageBody: event.target.value })}
+                        />
+                        <Button className={classes.button} variant="contained" color="primary" type="submit">Send</Button>
 
-                            <Button type="submit">Send</Button>
-
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         )
     }
 }
 
-export default SendMessage
+export default withStyles(styles)(SendMessage)

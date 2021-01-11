@@ -20,7 +20,6 @@ const styles = (theme:Theme) => ({
     root: {
             width: '100%',
             maxWidth: 360,
-            backgroundColor: theme.palette.background.paper,
           },
           nested: {
             paddingLeft: theme.spacing(4),
@@ -106,12 +105,12 @@ type myState = {
                     <ListItemText primary="Inbox" />
                   </ListItem>
                   </Link>
-                  <Link color="inherit" href="/message">
+                  <Link color="inherit" href="/sendmessage">
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
                       <InboxIcon />
                     </ListItemIcon>
-                    <ListItemText primary="send new message" />
+                    <ListItemText primary="New Message" />
                   </ListItem>
                   </Link>
                 </List>

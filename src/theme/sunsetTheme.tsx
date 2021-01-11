@@ -1,4 +1,4 @@
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 import { orange, yellow} from '@material-ui/core/colors';
 
 

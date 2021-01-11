@@ -6,35 +6,32 @@ import { TextField, Button, Typography } from "@material-ui/core"
 type myState = {
     messageBody: string;
     redirect: string;
-    subject: string;
 }
 type myProps = {
     token: string | null;
-    parentMessage: any;
-    replyToMessage(): void;
+    messageToUpdate: any;
+    updateMessage(): void;
 }
 
 
-class ReplyMessage extends Component<myProps, myState> {
+class UpdateMessage extends Component<myProps, myState> {
     constructor(props: myProps) {
         super(props)
         this.state = {
-            subject: "",
             messageBody: "",
             redirect: "",
         }
     }
 
     handleSubmit = (event: any) => {
-        event.preventDefault()
-
+        
+            let messageId = this.props.messageToUpdate.id
             let body = {
-                subject: this.state.subject,
                 messageBody: this.state.messageBody,
-                parentMessageId: this.props.parentMessage.id
             }
-            fetch("http://localhost:3000/reply/reply", {
-                method: "POST",
+            console.log(this.props.messageToUpdate,"The Message", body, "the Body")
+            fetch(`http://localhost:3000/message/updateMessage/${messageId}`, {
+                method: "Put",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": this.props.token!
@@ -44,7 +41,7 @@ class ReplyMessage extends Component<myProps, myState> {
             })
                 .then(res => res.json())
                 .then(data => {
-                    this.props.replyToMessage();
+                    this.props.updateMessage();
                     this.setState({ redirect: "/message" });
                 })
                 .catch(err => console.log(err))
@@ -59,12 +56,12 @@ class ReplyMessage extends Component<myProps, myState> {
             <div>
                 <div className="container">
                     <div className="innerCard">
-                        <Typography variant="h3">Reply to: {this.props.parentMessage ? this.props.parentMessage.user.userName : ""}</Typography>
+                        <Typography variant="h3">Updating Message to: {this.props.messageToUpdate ? this.props.messageToUpdate.user.userName : ""}</Typography>
                         <form onSubmit={(e) => this.handleSubmit(e)} autoComplete="off">
 
                             <TextField id="to"
                                 label="To"
-                                defaultValue={this.props.parentMessage ? this.props.parentMessage.user.userName : ""}
+                                defaultValue={this.props.messageToUpdate  ? this.props.messageToUpdate.user.userName : ""}
                                 fullWidth
                                 InputProps={{
                                     readOnly: true
@@ -75,15 +72,17 @@ class ReplyMessage extends Component<myProps, myState> {
                                 id="subject"
                                 label="Subject"
                                 fullWidth
-                                defaultValue={this.state.subject}
+                                InputProps={{
+                                    readOnly: true
+                                }}
+                                defaultValue={this.props.messageToUpdate.subject}
                                 variant="outlined"
-                                onChange={(event) => this.setState({ subject: event.target.value })}
                             />
 
                             <TextField
                                 id="messageBody"
                                 label="Message"
-                                defaultValue={this.state.messageBody}
+                                defaultValue={this.props.messageToUpdate.messageBody}
                                 variant="outlined"
                                 multiline
                                 rows={10}
@@ -102,4 +101,4 @@ class ReplyMessage extends Component<myProps, myState> {
     }
 }
 
-export default ReplyMessage
+export default UpdateMessage
