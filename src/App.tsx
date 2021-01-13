@@ -26,7 +26,7 @@ const styles = (theme: Theme) => createStyles({
     minHeight: "790px",
     '&::before': {
       content: "''",
-      backgroundColor: themes.mainTheme.palette.primary.main,
+      backgroundColor: localStorage.getItem("theme") == "sunset" ? themes.sunsetTheme.palette.primary.main : themes.mainTheme.palette.primary.main, 
       position: "absolute",
       width: "89%",
       height: "100%",
@@ -46,6 +46,7 @@ const styles = (theme: Theme) => createStyles({
   },
   leaderboard: {
     padding: theme.spacing(2),
+    position: "relative",
     textAlign: 'center',
     margin: "1rem",
     height: "100%",
@@ -54,6 +55,14 @@ const styles = (theme: Theme) => createStyles({
     maxHeight: "800px",
     minHeight: "790px",
     overflow: "auto",
+    '&::before': {
+      content: "''",
+      backgroundColor: localStorage.getItem("theme") == "sunset" ? themes.sunsetTheme.palette.primary.main : themes.mainTheme.palette.primary.main, 
+      position: "absolute",
+      width: "89%",
+      height: "95%",
+      borderRadius: "1rem",
+    }
   },
   backgroundVideo: {
     position: "absolute",

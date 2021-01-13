@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
-import { TextField, Button } from "@material-ui/core"
+import { TextField, Button, Typography } from "@material-ui/core"
 import { withStyles, createStyles, Theme } from "@material-ui/core"
 
 
@@ -122,8 +122,10 @@ class SendMessage extends Component<myProps, myState> {
         const { classes } = this.props;
         return (
             <div>
-                <h1>This is send mail</h1>
-                <h2>New Message</h2>
+                <Typography variant="h2">
+                New Message
+
+                </Typography>
                 <div className={classes.innerWrap}>
                     <form onSubmit={(e) => this.handleSubmit(e)} autoComplete="off">
 
