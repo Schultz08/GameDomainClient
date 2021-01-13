@@ -1,6 +1,8 @@
 import React from "react";
 import LeaderBoardsDisplay from "./LeaderBoardDisplay"
 import Grid from '@material-ui/core/Grid';
+import APIURL from  "../../helpers/enviroment"
+
 
 class LeaderBoards extends React.Component {
     state ={
@@ -8,7 +10,7 @@ class LeaderBoards extends React.Component {
     }
 
     componentDidMount(){
-        fetch(`http://localhost:3000/score/allScores/`, {
+        fetch(`${APIURL}/score/allScores/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

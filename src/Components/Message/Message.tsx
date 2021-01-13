@@ -2,6 +2,8 @@ import React from "react";
 import MessageDisplay from "./MessageDisplay"
 import { Redirect } from "react-router-dom"
 import { Typography, Grid, withStyles, Theme, createStyles } from "@material-ui/core";
+import APIURL from  "../../helpers/enviroment"
+
 
 const styles = (theme: Theme) => createStyles({
 
@@ -48,7 +50,7 @@ class Message extends React.Component<myProps, myState> {
 
     getMail = () => {
 
-        fetch(`http://localhost:3000/message/getMail`, {
+        fetch(`${APIURL}/message/getMail`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -63,7 +65,7 @@ class Message extends React.Component<myProps, myState> {
 
     deleteMessage = (id: number, isReplyMessage: boolean) => {
         if (isReplyMessage) {
-            fetch(`http://localhost:3000/reply/deleteReply/${id}`, {
+            fetch(`${APIURL}reply/deleteReply/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,7 +75,7 @@ class Message extends React.Component<myProps, myState> {
                 .catch(err => console.log(err))
             this.setState({ conversation: null })
         } else {
-            fetch(`http://localhost:3000/message/deleteMessage/${id}`, {
+            fetch(`${APIURL}/message/deleteMessage/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

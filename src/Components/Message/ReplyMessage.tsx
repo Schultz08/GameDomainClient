@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { TextField, Button, Typography } from "@material-ui/core"
+import APIURL from  "../../helpers/enviroment"
+
 
 
 type myState = {
@@ -33,7 +35,7 @@ class ReplyMessage extends Component<myProps, myState> {
                 messageBody: this.state.messageBody,
                 parentMessageId: this.props.parentMessage.id
             }
-            fetch("http://localhost:3000/reply/reply", {
+            fetch(`${APIURL}/reply/reply`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

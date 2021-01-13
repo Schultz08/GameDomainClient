@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { TextField, Button, Typography } from "@material-ui/core"
+import APIURL from  "../../helpers/enviroment"
+
 
 
 type myState = {
@@ -30,7 +32,7 @@ class UpdateMessage extends Component<myProps, myState> {
                 messageBody: this.state.messageBody,
             }
             console.log(this.props.messageToUpdate,"The Message", body, "the Body")
-            fetch(`http://localhost:3000/message/updateMessage/${messageId}`, {
+            fetch(`${APIURL}/message/updateMessage/${messageId}`, {
                 method: "Put",
                 headers: {
                     "Content-Type": "application/json",

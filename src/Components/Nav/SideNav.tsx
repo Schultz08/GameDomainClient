@@ -14,6 +14,8 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Redirect } from "react-router-dom"
+import APIURL from  "../../helpers/enviroment"
+
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -99,7 +101,7 @@ class SideNav extends React.Component<myProps, myState>{
       }
     }
 
-    fetch(`http://localhost:3000/user/theme/update`, {
+    fetch(`${APIURL}/user/theme/update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

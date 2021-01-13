@@ -1,5 +1,6 @@
 import React from "react"
 import { Button, Typography, withStyles, createStyles, TextField, Theme, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, TableHead, createMuiTheme } from "@material-ui/core"
+import APIURL from "../../helpers/enviroment"
 
 
 const styles = (theme: Theme) => createStyles({
@@ -83,7 +84,7 @@ class AdminMenu extends React.Component<myProps, myState>{
 
             let body = { userRole: "Admin" }
 
-            fetch(`http://localhost:3000/user/admin`, {
+            fetch(`${APIURL}/user/admin`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -104,7 +105,7 @@ class AdminMenu extends React.Component<myProps, myState>{
 
     }
     getUsers = () => {
-        fetch(`http://localhost:3000/user/getEmAll`, {
+        fetch(`${APIURL}/user/getEmAll`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -142,7 +143,7 @@ class AdminMenu extends React.Component<myProps, myState>{
             score: 0,
         }
 
-        fetch("http://localhost:3000/score/updateScore", {
+        fetch("${APIURL}/score/updateScore", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

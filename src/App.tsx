@@ -5,7 +5,7 @@ import { withStyles, createStyles } from '@material-ui/core/styles';
 import { Theme, ThemeProvider, MuiThemeProvider, fade } from '@material-ui/core/styles';
 import { Grid, Button, CssBaseline } from "@material-ui/core"
 import * as themes from "./theme"
-
+import APIURL from "./helpers/enviroment"
 import Video from "./assets/GameVid.mp4"
 
 const styles = (theme: Theme) => createStyles({
@@ -107,7 +107,7 @@ class App extends React.Component<myProps, myState>{
     this.setState({ token: token });
 
     if (!localStorage.getItem("theme") && this.state.token) {
-      fetch(`http://localhost:3000/user/theme`, {
+      fetch(`${APIURL}/user/theme`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +130,7 @@ class App extends React.Component<myProps, myState>{
     }
 
     if (!localStorage.getItem("theme") && this.state.token) {
-      fetch(`http://localhost:3000/user/theme`, {
+      fetch(`${APIURL}/user/theme`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, TextField, Typography, withStyles, createStyles, Theme } from '@material-ui/core';
 import { Redirect } from "react-router-dom"
+import APIURL from  "../../helpers/enviroment"
 
 
 const styles = (theme: Theme) => createStyles({
@@ -56,7 +57,7 @@ class Auth extends React.Component<myProps, myState> {
     handleSubmit = (event: any) => {
         event.preventDefault();
 
-        let url = this.state.login ? "http://localhost:3000/user/login" : "http://localhost:3000/user/register"
+        let url = this.state.login ? `${APIURL}/user/login` : `${APIURL}/user/register`
 
 
         const body = this.state.login ? {

@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { TextField, Button, Typography } from "@material-ui/core"
 import { withStyles, createStyles, Theme } from "@material-ui/core"
+import APIURL from  "../../helpers/enviroment"
+
 
 
 const styles = ((theme: Theme) => createStyles({
@@ -61,7 +63,7 @@ class SendMessage extends Component<myProps, myState> {
 
     verifyUser = (event: any) => {
         let userName = this.state.receivingUser;
-        fetch(`http://localhost:3000/user/byusername/${userName}`, {
+        fetch(`${APIURL}/user/byusername/${userName}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -95,7 +97,7 @@ class SendMessage extends Component<myProps, myState> {
                 receivingId: this.state.receivingId
             }
             console.log(body)
-            fetch("http://localhost:3000/message/newMessage", {
+            fetch(`${APIURL}/message/newMessage`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

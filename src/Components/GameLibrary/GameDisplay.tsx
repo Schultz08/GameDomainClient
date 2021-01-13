@@ -2,6 +2,8 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Route, Switch, BrowserRouter as Router, Redirect, matchPath } from "react-router-dom"
 import CircleBlaster from "../../Games/CircleBlaster"
+import APIURL from  "../../helpers/enviroment"
+
 
 type myState = {
     userScoreData: any;
@@ -53,7 +55,7 @@ class GameDisplay extends React.Component<myProps, myState> {
         }
         if (this.state.userScoreData.scores.length == 0) {
             console.log("1")
-            fetch("http://localhost:3000/score/score", {
+            fetch(`${APIURL}/score/score`, {
                 method: "Post",
                 headers: {
                     "Content-Type": "application/json",
@@ -81,7 +83,7 @@ class GameDisplay extends React.Component<myProps, myState> {
             if (!this.state.isUpdateScore) {
                 console.log("3")
 
-                fetch("http://localhost:3000/score/score", {
+                fetch(`${APIURL}/score/score`, {
                     method: "Post",
                     headers: {
                         "Content-Type": "application/json",
@@ -96,7 +98,7 @@ class GameDisplay extends React.Component<myProps, myState> {
                 console.log("4")
 
 
-                fetch("http://localhost:3000/score/updateScore", {
+                fetch(`${APIURL}/score/updateScore`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -115,7 +117,7 @@ class GameDisplay extends React.Component<myProps, myState> {
 
     getUserScore = () => {
 
-        fetch("http://localhost:3000/score/singleUserSorces", {
+        fetch(`${APIURL}/score/singleUserSorces`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
