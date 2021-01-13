@@ -8,8 +8,8 @@ switch(window.location.hostname){
         APIURL = "http://localhost:3000";
         break;
     
-    case "https://git.heroku.com/jas-gamedomain.git":
-    APIURL = "https://git.heroku.com/jas-gamedomain.git"
+    case "https://jas-gamedomain.herokuapp.com/":
+    APIURL = "https://jas-gamedomain.herokuapp.com/"
 }
 
 export default APIURL;
