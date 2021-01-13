@@ -1,10 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import "./gameStyle.css"
+import { Button, Typography } from "@material-ui/core"
 
-const Canvas = props => {
+
+const CircleBlaster = (props) => {
     let [score, setScore] = useState(0)
+    let [highScore, setHighScore] = useState(0)
     let [isPlaying, setIsPlaying] = useState(false)
+    let [isSubmit, setIsSubmit] = useState(false)
+    let [gameOver, setGameOver] = useState(false)
     const [projectiles, setProjectiles] = useState([])
     const [enemies, setEnemies] = useState([])
     const [particles, setParticles] = useState([])
@@ -21,17 +26,17 @@ const Canvas = props => {
     useEffect(() => {
         const canvas = canvasRef.current;
         const canvasContext = canvas.getContext("2d");
-        canvas.style.width ='100%';
-        canvas.style.height='100%';
-        canvas.width  = canvas.offsetWidth;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
         canvasContext.fillStyle = "rgba(0,0,0,1)"
         canvasContext.fillRect(0, 0, canvas.width, canvas.height)
-    },[prevent])
+    }, [prevent])
 
     useEffect(() => {
         buildGame();
-    },[isPlaying])
+    }, [isPlaying])
 
 
     useEffect(() => {
@@ -44,7 +49,7 @@ const Canvas = props => {
         return () => {
             window.removeEventListener("resize", resizeListener)
         }
-    },[width, height])
+    }, [width, height])
 
     class Player {
         constructor(x, y, radius, color) {
@@ -171,39 +176,32 @@ const Canvas = props => {
     }
 
 
-    function setGameWindow(){
+    function setGameWindow() {
         const canvas = canvasRef.current;
         const canvasContext = canvas.getContext("2d");
-        canvas.style.width ='100%';
-        canvas.style.height='100%';
-        canvas.width  = canvas.offsetWidth;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
     }
 
     function startGame() {
         setIsPlaying(prevState => !prevState)
-        
+
     }
-    
+
     function buildGame() {
         setGameWindow();
-        console.log("1",isPlaying)
 
         const canvas = canvasRef.current;
-        console.log("2",isPlaying)
 
         const canvasContext = canvas.getContext("2d");
-        console.log("3",isPlaying)
 
         const x = canvas.width / 2
-        console.log("4",isPlaying)
 
         const y = canvas.height / 2
-        console.log("5",isPlaying)
 
         player = new Player(x, y, 10, "red",)
-        console.log("6",isPlaying)
-
         spawnEnemies()
         animate()
     }
@@ -241,7 +239,7 @@ const Canvas = props => {
             }
             newEnemies.push(new Enemy(x, y, radius, color, velocity))
             setEnemies(newEnemies)
-        }, 1000)
+        }, isPlaying ? 1000 : 1000000000)
     }
 
 
@@ -260,7 +258,7 @@ const Canvas = props => {
 
         player.draw();
 
-        if(!isPlaying){
+        if (!isPlaying) {
             cancelAnimationFrame(animeationId)
         }
         //create explosions
@@ -297,6 +295,8 @@ const Canvas = props => {
 
             if (dist - enemy.radius - player.radius < 1) {
                 cancelAnimationFrame(animeationId)
+                setGameOver(true)
+                setIsPlaying(false)
             }
 
             newProjectiles.forEach((projectile, pIndex) => {
@@ -347,7 +347,7 @@ const Canvas = props => {
         let newProjectiles = projectiles
         const angle = Math.atan2(
             event.clientY - height / 2,
-            event.clientX -  width / 2)
+            event.clientX - width / 2)
         const velocity = {
             x: Math.cos(angle) * 5,
             y: Math.sin(angle) * 5
@@ -365,6 +365,45 @@ const Canvas = props => {
 
     }
 
+    function newGame(){
+        setProjectiles([])
+        setEnemies([])
+        setParticles([])
+        setIsPlaying(true)
+        setGameOver(false)
+    }
+
+    function submitScore(){
+        if(!isSubmit){
+            props.createOrUpdateScore("CircleBlaster", score)
+            setIsSubmit(true)
+        }
+    }
+
+    function displayInfo() {
+        if (!isPlaying && gameOver) {
+            return (
+                <div className="gameInfo">
+                    <Typography>Game Over!</Typography>
+                    <Typography className="warning">this game dose not work well when not full screen! Also plenty of little bugs</Typography>
+                    <Button variant="contained" color="primary" onClick={() => newGame()}>New Game</Button>
+                    <Button variant="contained" color="primary" onClick={() => submitScore()}>{isSubmit ? "Score updated!": "Update Score"}</Button>
+
+                </div>
+            )
+        } else if (!isPlaying) {
+            return (
+
+                <div className="gameInfo">
+                    <Typography>Welcome to CircleBlaster!</Typography>
+                    <Typography>Click on the screen to fire at the enemies!</Typography>
+                    <Typography>its all over once they crash into you! destroy them before that happens!!</Typography>
+                    <Typography className="warning">this game dose not work well when not full screen! Also plenty of litle bugs</Typography>
+                    <Button variant="contained" color="primary" onClick={() => startGame()}>Play Game</Button>
+                </div>
+            )
+        }
+    }
 
 
     return (
@@ -374,11 +413,11 @@ const Canvas = props => {
                 <span>{score}</span>
             </div>
             <canvas ref={canvasRef}{...props} onClick={(e) => handleClick(e)}></canvas>
-            <button onClick={() => startGame()} className="thebutton">The Button</button>
+            {displayInfo()}
         </div>
     )
 }
 
 
 
-export default Canvas;
+export default CircleBlaster;

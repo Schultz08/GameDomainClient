@@ -1,7 +1,23 @@
 import React from "react";
-import "./Auth.css";
-import { Button } from '@material-ui/core';
+import { Button, TextField, Typography, withStyles, createStyles, Theme } from '@material-ui/core';
 import { Redirect } from "react-router-dom"
+
+
+const styles = (theme: Theme) => createStyles({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
+    title: {
+        borderBottom: `3px solid ${theme.palette.primary.main}`
+    },
+    space: {
+        margin: 5,
+    }
+});
 
 type myState = {
     redirect: string | null;
@@ -15,7 +31,8 @@ type myState = {
 }
 
 interface myProps {
-    updateToken:(token: string) => void;
+    updateToken: (token: string) => void;
+    classes: any;
 }
 
 
@@ -62,7 +79,10 @@ class Auth extends React.Component<myProps, myState> {
         })
             .then(res => res.json())
             .then(data => {
-                // console.log(localStorage.getItem("token"))
+                console.log(data, "my error")
+                if(data.message == "Email already in use."){
+
+                }
                 localStorage.setItem("token", data.token)
                 this.props.updateToken(data.token)
                 this.setState({ redirect: "/" })
@@ -71,7 +91,7 @@ class Auth extends React.Component<myProps, myState> {
             .catch(err => console.log(err))
     }
 
-    componentDidMount(){
+    componentDidMount() {
         console.log(this.props)
     }
 
@@ -90,54 +110,83 @@ class Auth extends React.Component<myProps, myState> {
         this.setState({ login: !this.state.login })
     }
 
-    signupFields = () => {
+    signupFields = (classes: any) => {
         return !this.state.login ?
             <div>
-                <input
-                    type="text"
+                <TextField
+                    className={classes.space}
+                    color="secondary"
+                    id="firstName"
+                    label="First Name"
                     value={this.state.firstName}
+                    variant="outlined"
                     onChange={(event) => this.setState({ firstName: event.target.value })}
-                    name="firstName"
-                ></input>
-                <input
-                    type="text"
+                />
+
+                <TextField
+                    className={classes.space}
+                    color="secondary"
+                    id="lastName"
+                    label="Last Name"
                     value={this.state.lastName}
+                    variant="outlined"
                     onChange={(event) => this.setState({ lastName: event.target.value })}
-                    name="lastName"
-                ></input>
-                <input
-                    type="text"
+                />
+
+                <TextField
+                    className={classes.space}
+                    color="secondary"
+                    id="userName"
+                    label="User Name"
                     value={this.state.userName}
+                    variant="outlined"
                     onChange={(event) => this.setState({ userName: event.target.value })}
-                    name="userName"
-                ></input>
+                />
             </div>
             :
             null
     }
 
-    loginButtons = () => {
+    loginButtons = (classes: any) => {
         return this.state.login ?
             <div>
-                <Button color="primary"
-                    className="subButton"
+                <Button
+                    className={classes.space}
+                    variant="contained"
+                    color="primary"
                     type="submit"
-                >Login!</Button>
-                <Button color="primary"
+                >
+                    Login!
+                </Button>
+
+                <Button
+                    className={classes.space}
+                    variant="contained"
+                    color="primary"
                     onClick={(e) => this.logginToggle(e)}
-                    className="subButton"
-                >Sign Up!</Button>
+                >
+                    Sign Up!
+                </Button>
             </div>
             :
             <div>
-                <Button color="primary"
-                    className="subButton"
+                <Button
+                    className={classes.space}
+                    variant="contained"
+                    color="primary"
                     type="submit"
-                >Register!</Button>
-                <Button color="primary"
+                >
+                    Register!
+                    </Button>
+
+                <Button
+                    className={classes.space}
+                    variant="contained"
+                    color="primary"
                     onClick={(e) => this.logginToggle(e)}
-                    className="subButton"
-                >Login!</Button>
+                >
+                    Login!
+                    </Button>
             </div>
     }
 
@@ -145,28 +194,37 @@ class Auth extends React.Component<myProps, myState> {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
         }
+        const { classes } = this.props
         return (
             <div className="container">
                 <div className="innerCard">
                     <form onSubmit={(e) => this.handleSubmit(e)}>
-                        <h2>{this.title()}</h2>
-                        {this.signupFields()}
-                        <input
+                        <Typography className={classes.title}variant="h4">
+                            {this.title()}
+                        </Typography>
+                        {this.signupFields(classes)}
+                        <TextField
+                            className={classes.space}
+                            color="secondary"
                             type="email"
+                            id="email"
+                            label="Email"
                             value={this.state.email}
+                            variant="outlined"
                             onChange={(event) => this.setState({ email: event.target.value })}
-                            name="email"
-                            placeholder="Email@email.com"
-                        ></input>
-                        <input
+                        />
+                        <TextField
+                            className={classes.space}
+                            color="secondary"
                             type="password"
+                            id="password"
+                            label="Password"
                             value={this.state.password}
+                            variant="outlined"
                             onChange={(event) => this.setState({ password: event.target.value })}
-                            name="password"
-                            placeholder="password"
-                        ></input>
+                        />
                         <br />
-                        {this.loginButtons()}
+                        {this.loginButtons(classes)}
                     </form>
                 </div>
             </div>
@@ -174,4 +232,4 @@ class Auth extends React.Component<myProps, myState> {
     }
 }
 
-export default Auth;
+export default withStyles(styles)(Auth);

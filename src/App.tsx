@@ -1,10 +1,9 @@
 import React from 'react';
-import { Auth, LeaderBoards, Message, SideNav, SendMessage, ReplyMessage } from "./Components"
-import myGame from "./Games/myGame"
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
-import { withStyles, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Theme, ThemeProvider, MuiThemeProvider } from '@material-ui/core/styles';
-import { Grid, Button, CssBaseline} from "@material-ui/core"
+import { Auth, LeaderBoards, Message, SideNav, SendMessage, GameLibrary, GameDisplay, AdminMenu } from "./Components"
+import { Route, Switch, BrowserRouter as Router, Redirect } from "react-router-dom"
+import { withStyles, createStyles } from '@material-ui/core/styles';
+import { Theme, ThemeProvider, MuiThemeProvider, fade } from '@material-ui/core/styles';
+import { Grid, Button, CssBaseline } from "@material-ui/core"
 import * as themes from "./theme"
 
 import Video from "./assets/GameVid.mp4"
@@ -17,12 +16,23 @@ const styles = (theme: Theme) => createStyles({
   },
   sidenav: {
     padding: theme.spacing(2),
+    position: "relative",
     textAlign: 'center',
     margin: "1rem",
     height: "100%",
     minWidth: "240px",
     maxWidth: "277px",
     maxHeight: "800px",
+    minHeight: "790px",
+    '&::before': {
+      content: "''",
+      backgroundColor: themes.mainTheme.palette.primary.main,
+      position: "absolute",
+      width: "89%",
+      height: "100%",
+      borderRadius: "1rem",
+    }
+
   },
   center: {
     padding: theme.spacing(2),
@@ -31,6 +41,7 @@ const styles = (theme: Theme) => createStyles({
     height: "100%",
     minWidth: "240px",
     maxHeight: "800px",
+    minHeight: "790px",
     overflow: "auto",
   },
   leaderboard: {
@@ -41,7 +52,8 @@ const styles = (theme: Theme) => createStyles({
     minWidth: "240px",
     maxWidth: "277px",
     maxHeight: "800px",
-    overflow: "auto"
+    minHeight: "790px",
+    overflow: "auto",
   },
   backgroundVideo: {
     position: "absolute",
@@ -60,6 +72,8 @@ const styles = (theme: Theme) => createStyles({
 type myState = {
   token: string | null;
   theme: string | null;
+  isLoggedIn: boolean;
+  test: boolean;
 }
 
 type myProps = {
@@ -72,7 +86,10 @@ class App extends React.Component<myProps, myState>{
     super(props)
     this.state = {
       token: "",
+      test: false,
+      isLoggedIn: localStorage.getItem("token") ? true : false,
       theme: localStorage.getItem("theme") ? localStorage.getItem("theme") : "mainTheme",
+
     }
   }
 
@@ -125,7 +142,8 @@ class App extends React.Component<myProps, myState>{
   }
 
   clearToken = () => {
-    this.setState({ token: "" })
+    this.setState({ token: null })
+
   }
 
   getTheme = () => {
@@ -147,7 +165,7 @@ class App extends React.Component<myProps, myState>{
     const theme = this.getTheme()
     return (
       <MuiThemeProvider theme={theme}>
-        <CssBaseline/>
+        <CssBaseline />
         <div className={classes.root}>
           <Grid container justify="center" direction="row" alignItems="center" >
             <Grid container item xs className={classes.sidenav}>
@@ -162,12 +180,42 @@ class App extends React.Component<myProps, myState>{
                       <source src={Video} type='video/mp4' />
                     </video>
                   </Route>
-                  <Route path="/game" component={myGame} />
+                  <Route path="/game" component={GameLibrary} />
                   <Route path="/login"><Auth updateToken={this.updateToken} /></Route>
                   <Route path="/leaderBoard" component={LeaderBoards} />
-                  <Route path="/message"> <Message token={this.state.token} /></Route>
-                  <Route path="/sendmessage"> <SendMessage token={this.state.token} /></Route>
-                  {/* <Route path="/replymessage"> <ReplyMessage token={this.state.token} /></Route> */}
+
+                  {this.state.isLoggedIn ?
+                    <Route path="/message">
+                      <Message token={this.state.token} />
+                    </Route>
+                    : <Redirect to="/" />}
+
+                  {this.state.isLoggedIn ?
+                    <Route path="/sendmessage">
+                      <SendMessage token={this.state.token} />
+                    </Route>
+                    : <Redirect to="/" />}
+
+                  {/*Game Routes here*/}
+                  {this.state.isLoggedIn ?
+                    <Route path="/gamelibrary">
+                      <GameLibrary token={this.state.token!} />
+                    </Route>
+                    : <Redirect to="/" />}
+
+                  {this.state.isLoggedIn ?
+                    <Route path="/playgame">
+                      <GameDisplay token={this.state.token!} />
+                    </Route>
+                    : <Redirect to="/" />}
+
+                  {this.state.isLoggedIn ?
+                    <Route path="/admin">
+                      <AdminMenu token={this.state.token} />
+                    </Route>
+                    : <Redirect to="/" />}
+
+
                 </Switch>
               </Router>
             </Grid>

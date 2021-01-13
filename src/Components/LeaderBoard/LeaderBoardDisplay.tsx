@@ -11,7 +11,6 @@ const useStyle = makeStyles((theme: Theme) =>
         paper: {
             padding: theme.spacing(2),
             textAlign: "center",
-            color: theme.palette.text.primary
         }
 
     })
@@ -28,11 +27,11 @@ const LeaderBoardsDisplay = (props: any) => {
                     props.players.map((player: any, index: number) => {
                         return (
                             <Grid item xs key={index}>
-                                <Paper className={classes.paper}>
+                              
                                     {player.gameName}<br/>
                                     {player.user.userName}<br/>
                                     {player.score}
-                                </Paper>
+                               
                             </Grid>
                         )
                     })

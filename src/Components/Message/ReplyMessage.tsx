@@ -62,7 +62,8 @@ class ReplyMessage extends Component<myProps, myState> {
                         <Typography variant="h3">Reply to: {this.props.parentMessage ? this.props.parentMessage.user.userName : ""}</Typography>
                         <form onSubmit={(e) => this.handleSubmit(e)} autoComplete="off">
 
-                            <TextField id="to"
+                            <TextField 
+                            id="to"
                                 label="To"
                                 defaultValue={this.props.parentMessage ? this.props.parentMessage.user.userName : ""}
                                 fullWidth
@@ -92,7 +93,8 @@ class ReplyMessage extends Component<myProps, myState> {
                                 onChange={(event) => this.setState({ messageBody: event.target.value })}
                             />
 
-                            <Button type="submit">Send</Button>
+                            <Button variant="contained" color="primary" type="submit">Send</Button>
+
 
                         </form>
                     </div>

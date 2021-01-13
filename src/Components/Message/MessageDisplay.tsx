@@ -67,7 +67,6 @@ const styles = ((theme: Theme) => createStyles({
         padding: theme.spacing(2),
         textAlign: "center",
         color: "red",
-        backGroundColor: "blue",
     },
     replyMessageTable: {
         width: "50%",
@@ -360,8 +359,8 @@ class MessageDisplay extends React.Component<myProps, myState>{
         this.setState({ messages: data })
     }
 
-    //with the message? allows this function multi purpose. So when I call the function in the Row class I pass the message the user wants to reply/update then switch the view to the reply/update view. then when the user send/submits their reply/update i call this function again. This time is dose not pass a message skips setting the message and just switches back to the inbox view.
-    //Downside is this file is code heavy but pertty neat though.
+    //with the message? allows this function to be multi purpose. So when I call the function in the Row class I pass the message the user wants to reply/update, set it to the state. then switch the view to the reply/update view. Once the user send/submits their reply/update i call this function again. This time is dose not pass a message skips setting the state and just switches back to the inbox view.
+    //Downside is this file is code heavy but pertty cool though.
     replyToMessage = (message?: any) => {
         if (message) {
             this.setState({ parentMessage: message })

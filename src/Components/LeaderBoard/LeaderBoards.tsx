@@ -12,6 +12,7 @@ class LeaderBoards extends React.Component {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("token")!
             }
         })
         .then(res => res.json())
@@ -19,6 +20,7 @@ class LeaderBoards extends React.Component {
     }
 
     render(){
+        console.log(this.state.players, "leaderBoard")
         return (
             <LeaderBoardsDisplay players={this.state.players}/>
         )

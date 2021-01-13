@@ -1,14 +1,14 @@
 import React from "react";
 import MessageDisplay from "./MessageDisplay"
-import {Redirect} from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import { Typography, Grid, withStyles, Theme, createStyles } from "@material-ui/core";
 
-const styles = (theme:Theme) => createStyles({
-    
+const styles = (theme: Theme) => createStyles({
+
     root: {
-            width: '100%',
-          },
-  });
+        width: '100%',
+    },
+});
 
 type myProps = {
     token: string | null;
@@ -31,17 +31,17 @@ class Message extends React.Component<myProps, myState> {
             loggedInUserId: null,
         }
     }
-    
 
-    componentDidMount(){
-        if(this.state.conversation == null){
+
+    componentDidMount() {
+        if (this.state.conversation == null) {
             this.getMail()
         }
 
     }
 
-    componentDidUpdate(){
-        if(this.state.conversation == null){
+    componentDidUpdate() {
+        if (this.state.conversation == null) {
             this.getMail()
         }
     }
@@ -56,13 +56,13 @@ class Message extends React.Component<myProps, myState> {
             }
         })
             .then((res) => res.json())
-            .then((data) => { console.log(data, "Fetch"); this.setState({loggedInUserId: data.receivingId});this.setState({ conversation: data })})
+            .then((data) => { console.log(data, "Fetch"); this.setState({ loggedInUserId: data.receivingId }); this.setState({ conversation: data }) })
             .catch(err => console.log(err))
 
     }
 
     deleteMessage = (id: number, isReplyMessage: boolean) => {
-        if(isReplyMessage){
+        if (isReplyMessage) {
             fetch(`http://localhost:3000/reply/deleteReply/${id}`, {
                 method: "DELETE",
                 headers: {
@@ -70,9 +70,9 @@ class Message extends React.Component<myProps, myState> {
                     "Authorization": localStorage.getItem("token")!
                 }
             })
-            .catch(err => console.log(err)) 
-            this.setState({conversation: null})
-        }else{
+                .catch(err => console.log(err))
+            this.setState({ conversation: null })
+        } else {
             fetch(`http://localhost:3000/message/deleteMessage/${id}`, {
                 method: "DELETE",
                 headers: {
@@ -80,35 +80,13 @@ class Message extends React.Component<myProps, myState> {
                     "Authorization": localStorage.getItem("token")!
                 }
             })
-            .catch(err => console.log(err))
-            this.setState({conversation: null})
+                .catch(err => console.log(err))
+            this.setState({ conversation: null })
         }
     }
 
-    updateMessage = (message: any) => {
-            console.log(message, "updateMessage")
-            let messageId = message.id
-            let body = {
-                messageBody: message.messageBody
-            }
-            fetch(`http://localhost:3000/message/updateMessage/${messageId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": localStorage.getItem("token")!
-                },
-                body: JSON.stringify(body)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    this.setState({ redirect: "/message" })
-                })
-                .catch(err => console.log(err))
-
-    }
-
     displayConductor = (classes: any) => {
-        if(!this.state.conversation){
+        if (!this.state.conversation) {
             console.log("fetch from conduct")
         }
         console.log(this.state.conversation, "displayconduct 1")
@@ -116,29 +94,28 @@ class Message extends React.Component<myProps, myState> {
             console.log(this.state.conversation, "displayconductor")
             return (
                 <div className={classes.root}>
-                <Typography  variant="h3" >Inbox</Typography>
-            <MessageDisplay 
-            token={this.props.token!} 
-            conversation={this.state.conversation} 
-            deleteMessage={this.deleteMessage} 
-            loggedInUserId={this.state.loggedInUserId}
-            />
+                    <Typography variant="h3" >Inbox</Typography>
+                    <MessageDisplay
+                        token={this.props.token!}
+                        conversation={this.state.conversation}
+                        deleteMessage={this.deleteMessage}
+                        loggedInUserId={this.state.loggedInUserId}
+                    />
                 </div>
             )
         } else {
             return (
                 <div>
-                <Typography  variant="h3" >Inbox</Typography>
+                    <Typography variant="h3" >Inbox</Typography>
                     <h1>You have no Mail!!</h1>
                     <button onClick={this.handleClick}>Create New Message</button>
-                    
                 </div>
             )
         }
     }
 
     handleClick = () => {
-        this.setState({redirect: "/sendmessage"})
+        this.setState({ redirect: "/sendmessage" })
     }
 
     render() {
@@ -147,7 +124,7 @@ class Message extends React.Component<myProps, myState> {
             return <Redirect to={this.state.redirect} />
         }
         return (
-                this.displayConductor(classes)
+            this.displayConductor(classes)
         )
     }
 }
